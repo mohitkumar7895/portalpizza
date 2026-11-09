@@ -217,6 +217,47 @@ export async function ensureTables(): Promise<void> {
           ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
         `);
 
+        // Auto-migrate missing columns for existing tables
+        const ensureCol = async (tbl: string, col: string, def: string) => {
+          try {
+            await p.query(`SELECT ${col} FROM ${tbl} LIMIT 0`);
+          } catch (colErr: any) {
+            if (colErr?.code === "ER_BAD_FIELD_ERROR" || colErr?.errno === 1054) {
+              try {
+                await p.execute(`ALTER TABLE ${tbl} ADD COLUMN ${col} ${def}`);
+              } catch (alterErr) {
+                console.error(`[DB Migration] Failed adding ${col} to ${tbl}:`, alterErr);
+              }
+            }
+          }
+        };
+
+        // super_admins table
+        await ensureCol("super_admins", "role", "VARCHAR(50) DEFAULT 'superadmin'");
+        await ensureCol("super_admins", "email", "VARCHAR(150) DEFAULT ''");
+        await ensureCol("super_admins", "phone", "VARCHAR(50) DEFAULT ''");
+
+        // restaurants table
+        await ensureCol("restaurants", "ownerName", "VARCHAR(150) DEFAULT ''");
+        await ensureCol("restaurants", "phone", "VARCHAR(50) DEFAULT ''");
+        await ensureCol("restaurants", "email", "VARCHAR(150) DEFAULT ''");
+        await ensureCol("restaurants", "status", "ENUM('active', 'pending', 'inactive', 'suspended') DEFAULT 'pending'");
+        await ensureCol("restaurants", "paymentStatus", "ENUM('paid', 'pending', 'failed') DEFAULT 'pending'");
+        await ensureCol("restaurants", "paymentAmount", "DECIMAL(10,2) DEFAULT 0");
+        await ensureCol("restaurants", "paymentNotes", "TEXT");
+        await ensureCol("restaurants", "assignedTo", "INT NULL");
+        await ensureCol("restaurants", "assignedName", "VARCHAR(150) NULL");
+        await ensureCol("restaurants", "assignedRole", "VARCHAR(50) NULL");
+        await ensureCol("restaurants", "taskNotes", "TEXT");
+        await ensureCol("restaurants", "taskStatus", "ENUM('pending', 'in_progress', 'completed') DEFAULT 'pending'");
+        await ensureCol("restaurants", "monthlyFee", "DECIMAL(10,2) DEFAULT 0");
+        await ensureCol("restaurants", "billingDueDate", "DATE NULL");
+        await ensureCol("restaurants", "subscriptionStatus", "ENUM('active', 'expired', 'suspended') DEFAULT 'active'");
+        await ensureCol("restaurants", "lastPaymentDate", "DATE NULL");
+
+        // admins table
+        await ensureCol("admins", "role", "VARCHAR(50) DEFAULT 'admin'");
+
         global._tablesInitialized = true;
       } catch (err) {
         console.error("Auto table creation warning:", err);

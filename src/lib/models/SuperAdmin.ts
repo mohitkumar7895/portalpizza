@@ -31,7 +31,7 @@ export const SuperAdmin = {
   async findByUsername(username: string): Promise<SuperAdminDoc | null> {
     const u = username.trim();
     const rows = await query<RowDataPacket[]>(
-      "SELECT id, username, passwordHash, name, email, phone, role, createdAt, updatedAt FROM super_admins WHERE username = ? LIMIT 1",
+      "SELECT * FROM super_admins WHERE username = ? LIMIT 1",
       [u]
     );
     if (!rows || rows.length === 0) return null;
@@ -42,7 +42,7 @@ export const SuperAdmin = {
     const numId = Number(id);
     if (!numId || isNaN(numId)) return null;
     const rows = await query<RowDataPacket[]>(
-      "SELECT id, username, passwordHash, name, email, phone, role, createdAt, updatedAt FROM super_admins WHERE id = ? LIMIT 1",
+      "SELECT * FROM super_admins WHERE id = ? LIMIT 1",
       [numId]
     );
     if (!rows || rows.length === 0) return null;
@@ -51,7 +51,7 @@ export const SuperAdmin = {
 
   async findAll(): Promise<SuperAdminDoc[]> {
     const rows = await query<RowDataPacket[]>(
-      "SELECT id, username, passwordHash, name, email, phone, role, createdAt, updatedAt FROM super_admins ORDER BY id ASC"
+      "SELECT * FROM super_admins ORDER BY id ASC"
     );
     return rows.map(mapRow);
   },
@@ -65,19 +65,40 @@ export const SuperAdmin = {
     role?: string;
   }): Promise<SuperAdminDoc> {
     const role = data.role?.trim() || "superadmin";
-    const result = await execute<ResultSetHeader>(
-      "INSERT INTO super_admins (username, passwordHash, name, email, phone, role) VALUES (?, ?, ?, ?, ?, ?)",
-      [
-        data.username.trim(),
-        data.passwordHash,
-        data.name.trim(),
-        data.email?.trim() ?? "",
-        data.phone?.trim() ?? "",
-        role,
-      ]
-    );
+    let insertId: number;
+
+    try {
+      const result = await execute<ResultSetHeader>(
+        "INSERT INTO super_admins (username, passwordHash, name, email, phone, role) VALUES (?, ?, ?, ?, ?, ?)",
+        [
+          data.username.trim(),
+          data.passwordHash,
+          data.name.trim(),
+          data.email?.trim() ?? "",
+          data.phone?.trim() ?? "",
+          role,
+        ]
+      );
+      insertId = result.insertId;
+    } catch (e: any) {
+      // If role/email/phone columns don't exist yet in the database, insert minimal fields
+      if (e?.code === "ER_BAD_FIELD_ERROR" || e?.errno === 1054) {
+        const result = await execute<ResultSetHeader>(
+          "INSERT INTO super_admins (username, passwordHash, name) VALUES (?, ?, ?)",
+          [
+            data.username.trim(),
+            data.passwordHash,
+            data.name.trim(),
+          ]
+        );
+        insertId = result.insertId;
+      } else {
+        throw e;
+      }
+    }
+
     return {
-      id: result.insertId,
+      id: insertId,
       username: data.username.trim(),
       passwordHash: data.passwordHash,
       name: data.name.trim(),
@@ -129,10 +150,24 @@ export const SuperAdmin = {
     if (fields.length === 0) return true;
 
     values.push(numId);
-    await execute(
-      `UPDATE super_admins SET ${fields.join(", ")}, updatedAt = NOW() WHERE id = ?`,
-      values
-    );
+    try {
+      await execute(
+        `UPDATE super_admins SET ${fields.join(", ")}, updatedAt = NOW() WHERE id = ?`,
+        values
+      );
+    } catch (e: any) {
+      if (e?.code === "ER_BAD_FIELD_ERROR" || e?.errno === 1054) {
+        // Fallback to name only if other columns don't exist
+        if (data.name !== undefined) {
+          await execute("UPDATE super_admins SET name = ?, updatedAt = NOW() WHERE id = ?", [
+            data.name.trim(),
+            numId,
+          ]);
+        }
+      } else {
+        throw e;
+      }
+    }
     return true;
   },
 };

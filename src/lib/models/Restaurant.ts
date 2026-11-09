@@ -73,10 +73,7 @@ export const Restaurant = {
   async findBySlug(slug: string): Promise<RestaurantDoc | null> {
     const s = slug.trim().toLowerCase();
     const rows = await query<RowDataPacket[]>(
-      `SELECT id, name, slug, ownerName, phone, email, status, paymentStatus, paymentAmount, paymentNotes,
-              assignedTo, assignedName, assignedRole, taskNotes, taskStatus,
-              monthlyFee, billingDueDate, subscriptionStatus, lastPaymentDate, createdAt, updatedAt
-       FROM restaurants WHERE slug = ? AND status = 'active' LIMIT 1`,
+      `SELECT * FROM restaurants WHERE slug = ? AND status = 'active' LIMIT 1`,
       [s]
     );
     if (!rows || rows.length === 0) return null;
@@ -86,10 +83,7 @@ export const Restaurant = {
   async findBySlugAny(slug: string): Promise<RestaurantDoc | null> {
     const s = slug.trim().toLowerCase();
     const rows = await query<RowDataPacket[]>(
-      `SELECT id, name, slug, ownerName, phone, email, status, paymentStatus, paymentAmount, paymentNotes,
-              assignedTo, assignedName, assignedRole, taskNotes, taskStatus,
-              monthlyFee, billingDueDate, subscriptionStatus, lastPaymentDate, createdAt, updatedAt
-       FROM restaurants WHERE slug = ? LIMIT 1`,
+      `SELECT * FROM restaurants WHERE slug = ? LIMIT 1`,
       [s]
     );
     if (!rows || rows.length === 0) return null;
@@ -100,10 +94,7 @@ export const Restaurant = {
     const numId = Number(id);
     if (!numId || isNaN(numId)) return null;
     const rows = await query<RowDataPacket[]>(
-      `SELECT id, name, slug, ownerName, phone, email, status, paymentStatus, paymentAmount, paymentNotes,
-              assignedTo, assignedName, assignedRole, taskNotes, taskStatus,
-              monthlyFee, billingDueDate, subscriptionStatus, lastPaymentDate, createdAt, updatedAt
-       FROM restaurants WHERE id = ? LIMIT 1`,
+      `SELECT * FROM restaurants WHERE id = ? LIMIT 1`,
       [numId]
     );
     if (!rows || rows.length === 0) return null;
@@ -112,10 +103,7 @@ export const Restaurant = {
 
   async findAllActive(): Promise<RestaurantDoc[]> {
     const rows = await query<RowDataPacket[]>(
-      `SELECT id, name, slug, ownerName, phone, email, status, paymentStatus, paymentAmount, paymentNotes,
-              assignedTo, assignedName, assignedRole, taskNotes, taskStatus,
-              monthlyFee, billingDueDate, subscriptionStatus, lastPaymentDate, createdAt, updatedAt
-       FROM restaurants WHERE status = 'active' ORDER BY createdAt DESC`
+      `SELECT * FROM restaurants WHERE status = 'active' ORDER BY createdAt DESC`
     );
     return rows.map(mapRow);
   },
