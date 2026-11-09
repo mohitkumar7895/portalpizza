@@ -38,10 +38,17 @@ export async function POST(request: Request) {
       superAdmin.name,
       superAdmin.role || "superadmin"
     );
-  } catch (e) {
+  } catch (e: any) {
     console.error("Super Admin login error:", e);
+    const msg = e?.message || "Super Admin authentication failed";
+    let userMsg = msg;
+    if (e?.code === "ECONNREFUSED" || e?.code === "ETIMEDOUT" || e?.code === "ENOTFOUND") {
+      userMsg = "Database connection failed. Please ensure your cloud MySQL database is active and DATABASE_URL or MYSQL_HOST is configured in Vercel Environment Variables.";
+    } else if (e?.code === "ER_ACCESS_DENIED_ERROR") {
+      userMsg = "Database access denied. Please verify your MySQL username and password in Vercel.";
+    }
     return NextResponse.json(
-      { error: "Super Admin authentication failed" },
+      { error: userMsg, code: e?.code },
       { status: 500 }
     );
   }

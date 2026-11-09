@@ -44,10 +44,17 @@ export async function POST(request: Request) {
     });
 
     return await jsonWithSuperAdminSession(created.id, created.username, created.name);
-  } catch (e) {
+  } catch (e: any) {
     console.error("Super Admin registration error:", e);
+    const msg = e?.message || "Failed to register Super Admin";
+    let userMsg = msg;
+    if (e?.code === "ECONNREFUSED" || e?.code === "ETIMEDOUT" || e?.code === "ENOTFOUND") {
+      userMsg = "Database connection failed. Please ensure your cloud MySQL database is active and DATABASE_URL or MYSQL_HOST is configured in Vercel Environment Variables.";
+    } else if (e?.code === "ER_ACCESS_DENIED_ERROR") {
+      userMsg = "Database access denied. Please verify your MySQL username and password in Vercel.";
+    }
     return NextResponse.json(
-      { error: "Failed to register Super Admin" },
+      { error: userMsg, code: e?.code },
       { status: 500 }
     );
   }
