@@ -84,11 +84,16 @@ export function ProductCard({ product, onAdd }: Props) {
             <p className="font-body text-sm font-black tabular-nums leading-none tracking-tight text-[#e51b24] sm:text-base">
               {priceLine.text}
             </p>
+            {priceLine.sub && (
+              <span className="mt-0.5 block text-[8.5px] font-bold text-neutral-500 uppercase tracking-tight sm:text-[9.5px]">
+                {priceLine.sub} • Customisable
+              </span>
+            )}
           </div>
           <button
             type="button"
             onClick={() => onAdd(product)}
-            className="inline-flex shrink-0 items-center justify-center gap-1 rounded-full bg-linear-to-r from-[#e51b24] to-[#f58220] px-3 py-1.5 min-h-8 text-[9.5px] font-black uppercase tracking-wide text-white shadow-[0_2px_8px_rgba(229,27,36,0.35)] transition hover:scale-[1.04] hover:shadow-[0_4px_14px_rgba(229,27,36,0.5)] active:scale-[0.98] sm:px-3.5 sm:py-2 sm:text-[10.5px]"
+            className="inline-flex shrink-0 items-center justify-center gap-1 rounded-full bg-linear-to-r from-[#e51b24] to-[#f58220] px-3 py-1.5 min-h-8 text-[9.5px] font-black uppercase tracking-wide text-white shadow-[0_2px_8px_rgba(229,27,36,0.35)] transition hover:scale-[1.04] hover:shadow-[0_4px_14px_rgba(229,27,36,0.5)] active:scale-[0.98] sm:px-3.5 sm:py-2 sm:text-[10.5px] cursor-pointer"
           >
             <ShoppingCart className="h-3 w-3 sm:h-3.5 sm:w-3.5" aria-hidden />
             Add

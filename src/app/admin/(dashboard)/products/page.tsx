@@ -533,8 +533,76 @@ export default function AdminProductsPage() {
         </p>
       </div>
 
-      <div className="overflow-x-auto rounded-2xl border border-neutral-200 bg-white shadow-sm">
-        <table className="w-full min-w-160 text-left text-sm">
+      {/* Mobile Card List (< md) */}
+      <div className="space-y-3 md:hidden">
+        {loading ? (
+          <div className="rounded-2xl border border-neutral-200 bg-white p-6 text-center text-sm text-neutral-500">
+            Loading products…
+          </div>
+        ) : filteredProducts.length === 0 ? (
+          <div className="rounded-2xl border border-neutral-200 bg-white p-6 text-center text-sm text-neutral-500">
+            {products.length === 0 ? "No products yet" : "No products match your search"}
+          </div>
+        ) : (
+          filteredProducts.map((p) => (
+            <div
+              key={p._id}
+              className="rounded-2xl border border-neutral-200 bg-white p-3.5 shadow-xs space-y-3"
+            >
+              <div className="flex items-start gap-3">
+                <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-xl border border-neutral-200 bg-neutral-100">
+                  <Image
+                    src={p.image || "/placeholder-food.svg"}
+                    alt={p.name}
+                    fill
+                    className="object-cover"
+                    sizes="64px"
+                  />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center gap-1.5">
+                    <span
+                      className={`inline-block h-2 w-2 rounded-full shrink-0 ${
+                        p.isVeg ? "bg-emerald-600" : "bg-red-600"
+                      }`}
+                    />
+                    <h3 className="text-sm font-bold text-neutral-900 truncate">{p.name}</h3>
+                  </div>
+                  <p className="text-xs text-neutral-500 mt-0.5">{p.category}</p>
+                  <p className="text-sm font-extrabold text-[#e60000] mt-1">₹ {p.price}</p>
+                  {p.variants && p.variants.length > 0 && (
+                    <p className="text-[11px] text-neutral-500">{p.variants.length} types / sizes</p>
+                  )}
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2 pt-2 border-t border-neutral-100">
+                <button
+                  type="button"
+                  onClick={() => {
+                    startEdit(p);
+                    window.scrollTo({ top: 0, behavior: "smooth" });
+                  }}
+                  className="flex-1 rounded-xl bg-neutral-100 py-2 text-xs font-bold text-neutral-800 hover:bg-neutral-200 transition"
+                >
+                  Edit Product
+                </button>
+                <button
+                  type="button"
+                  onClick={() => onDelete(p._id)}
+                  className="rounded-xl bg-red-50 px-4 py-2 text-xs font-bold text-red-600 hover:bg-red-100 transition"
+                >
+                  Delete
+                </button>
+              </div>
+            </div>
+          ))
+        )}
+      </div>
+
+      {/* Desktop Table (md:block) */}
+      <div className="hidden md:block overflow-x-auto rounded-2xl border border-neutral-200 bg-white shadow-sm">
+        <table className="w-full text-left text-sm">
           <thead className="bg-neutral-50 text-xs uppercase text-neutral-500">
             <tr>
               <th className="px-4 py-3">Item</th>

@@ -86,7 +86,7 @@ export function MenuView({
     customerAddress: string;
   } | null>(null);
   const router = useRouter();
-  const { lines, clear, subtotal } = useCart();
+  const { lines, clear, subtotal, itemCount } = useCart();
   const scrollToSection = useScrollToSection();
   const categoryStripRef = useRef<HTMLDivElement>(null);
   const categoryInnerRef = useRef<HTMLDivElement>(null);
@@ -338,7 +338,7 @@ export function MenuView({
         customerAddress: data.customerAddress,
       });
       setConfirmationOpen(true);
-      
+
       const trackingUrl = restaurantSlug
         ? `/${restaurantSlug}/order/${encodeURIComponent(id)}`
         : `/order/${encodeURIComponent(id)}`;
@@ -360,107 +360,141 @@ export function MenuView({
         <>
           <HeroBanner images={heroImages} />
 
-        <div className="mb-2.5 md:hidden">
-          <label htmlFor="dish-search" className="sr-only">
-            Search for dishes
-          </label>
-          <div className="relative">
-            <Search
-              className="pointer-events-none absolute left-3.5 top-1/2 h-4.5 w-4.5 -translate-y-1/2 text-[#e51b24]"
-              aria-hidden
-            />
-            <input
-              id="dish-search"
-              type="search"
-              autoComplete="off"
-              placeholder="Search for dishes…"
-              value={dishSearch}
-              onChange={(e) => setDishSearch(e.target.value)}
-              className="font-body w-full rounded-2xl border-2 border-[#ffde00]/70 bg-white py-2.5 pl-10 pr-4 text-sm text-[#0b2545] shadow-[0_4px_20px_-6px_rgba(11,37,69,0.1)] outline-none placeholder:text-neutral-400 focus:border-[#e51b24] focus:ring-2 focus:ring-[#e51b24]/20"
-            />
+          <div className="mb-2.5 md:hidden">
+            <label htmlFor="dish-search" className="sr-only">
+              Search for dishes
+            </label>
+            <div className="relative">
+              <Search
+                className="pointer-events-none absolute left-3.5 top-1/2 h-4.5 w-4.5 -translate-y-1/2 text-[#e51b24]"
+                aria-hidden
+              />
+              <input
+                id="dish-search"
+                type="search"
+                autoComplete="off"
+                placeholder="Search for dishes…"
+                value={dishSearch}
+                onChange={(e) => setDishSearch(e.target.value)}
+                className="font-body w-full rounded-2xl border-2 border-[#ffde00]/70 bg-white py-2.5 pl-10 pr-4 text-sm text-[#0b2545] shadow-[0_4px_20px_-6px_rgba(11,37,69,0.1)] outline-none placeholder:text-neutral-400 focus:border-[#e51b24] focus:ring-2 focus:ring-[#e51b24]/20"
+              />
+            </div>
           </div>
-        </div>
 
-        <div
-          ref={categoryStripRef}
-          onScroll={jumpCategoryLoop}
-          className="mb-3 -mx-1 min-w-0 w-full touch-pan-x overflow-x-auto overscroll-x-contain pb-1 sm:mb-4 scrollbar-hide"
-        >
           <div
-            ref={categoryInnerRef}
-            className="flex w-max min-w-min gap-1.5 px-1 sm:gap-2.5 sm:px-1.5 md:gap-3"
+            ref={categoryStripRef}
+            onScroll={jumpCategoryLoop}
+            className="mb-3 -mx-1 min-w-0 w-full touch-pan-x overflow-x-auto overscroll-x-contain pb-1 sm:mb-4 scrollbar-hide"
           >
-            {categoryStripModel.items.map((item, idx) => (
-              <button
-                key={
-                  categoryStripModel.loop
-                    ? `${item.listKey}-${idx}`
-                    : item.listKey
-                }
-                type="button"
-                onClick={() => scrollToSection(item.id)}
-                className="group flex min-w-36 max-w-48 shrink-0 items-center gap-1.5 rounded-xl border border-[#ffde00]/60 bg-white px-2.5 py-1.5 text-left shadow-[0_3px_12px_-4px_rgba(11,37,69,0.08)] transition hover:-translate-y-0.5 hover:shadow-[0_8px_22px_-6px_rgba(229,27,36,0.22)] hover:border-[#e51b24]/50 sm:min-w-44 sm:max-w-52 sm:gap-2 sm:rounded-2xl sm:px-3 sm:py-2 md:gap-2.5 md:min-w-48"
-              >
-                <span className="relative h-9 w-9 shrink-0 overflow-hidden rounded-full bg-[#fff8e7] ring-2 ring-[#ffde00] shadow-xs sm:h-10 sm:w-10">
-                  {item.image ? (
-                    <Image
-                      src={item.image.startsWith("http") ? item.image : item.image}
-                      alt=""
-                      fill
-                      className="object-cover"
-                      sizes="48px"
-                      unoptimized={item.image.startsWith("http")}
-                    />
-                  ) : (
-                    <Image
-                      src="/placeholder-food.svg"
-                      alt=""
-                      fill
-                      className="object-cover"
-                    />
-                  )}
-                </span>
-                <span className="font-navbar-brand text-[11px] font-black uppercase leading-tight text-[#0b2545] group-hover:text-[#e51b24] transition-colors sm:text-xs">
-                  {item.name}
-                </span>
-              </button>
-            ))}
+            <div
+              ref={categoryInnerRef}
+              className="flex w-max min-w-min gap-1.5 px-1 sm:gap-2.5 sm:px-1.5 md:gap-3"
+            >
+              {categoryStripModel.items.map((item, idx) => (
+                <button
+                  key={
+                    categoryStripModel.loop
+                      ? `${item.listKey}-${idx}`
+                      : item.listKey
+                  }
+                  type="button"
+                  onClick={() => scrollToSection(item.id)}
+                  className="group flex min-w-36 max-w-48 shrink-0 items-center gap-1.5 rounded-xl border border-[#ffde00]/60 bg-white px-2.5 py-1.5 text-left shadow-[0_3px_12px_-4px_rgba(11,37,69,0.08)] transition hover:-translate-y-0.5 hover:shadow-[0_8px_22px_-6px_rgba(229,27,36,0.22)] hover:border-[#e51b24]/50 sm:min-w-44 sm:max-w-52 sm:gap-2 sm:rounded-2xl sm:px-3 sm:py-2 md:gap-2.5 md:min-w-48"
+                >
+                  <span className="relative h-9 w-9 shrink-0 overflow-hidden rounded-full bg-[#fff8e7] ring-2 ring-[#ffde00] shadow-xs sm:h-10 sm:w-10">
+                    {item.image ? (
+                      <Image
+                        src={item.image.startsWith("http") ? item.image : item.image}
+                        alt=""
+                        fill
+                        className="object-cover"
+                        sizes="48px"
+                        unoptimized={item.image.startsWith("http")}
+                      />
+                    ) : (
+                      <Image
+                        src="/placeholder-food.svg"
+                        alt=""
+                        fill
+                        className="object-cover"
+                      />
+                    )}
+                  </span>
+                  <span className="font-navbar-brand text-[11px] font-black uppercase leading-tight text-[#0b2545] group-hover:text-[#e51b24] transition-colors sm:text-xs">
+                    {item.name}
+                  </span>
+                </button>
+              ))}
+            </div>
           </div>
-        </div>
 
-        {error && (
-          <p className="py-20 text-center text-red-600">{error}</p>
-        )}
+          {error && (
+            <p className="py-20 text-center text-red-600">{error}</p>
+          )}
 
-        {!loading && !error && orderedSections.length === 0 && dishSearch.trim() && (
-          <p className="py-12 text-center font-body text-sm text-neutral-500">
-            No dishes match &ldquo;{dishSearch.trim()}&rdquo;. Try another name.
-          </p>
-        )}
+          {!loading && !error && orderedSections.length === 0 && dishSearch.trim() && (
+            <p className="py-12 text-center font-body text-sm text-neutral-500">
+              No dishes match &ldquo;{dishSearch.trim()}&rdquo;. Try another name.
+            </p>
+          )}
 
-        {!loading && !error && orderedSections.length > 0 && (
-          <div className="flex flex-col gap-5 sm:gap-7 md:gap-9">
-            {orderedSections.map((sec) => (
-              <CategorySection
-                key={sec.listKey}
-                id={sec.sectionId}
-                title={sec.title}
-              >
-                {sec.items.map((p) => (
-                  <ProductCard
-                    key={p._id}
-                    product={p}
-                    onAdd={() => setModalProduct(p)}
-                  />
-                ))}
-              </CategorySection>
-            ))}
-          </div>
-        )}
+          {!loading && !error && orderedSections.length > 0 && (
+            <div className="flex flex-col gap-4 sm:gap-5 md:gap-6">
+              {orderedSections.map((sec) => (
+                <CategorySection
+                  key={sec.listKey}
+                  id={sec.sectionId}
+                  title={sec.title}
+                >
+                  {sec.items.map((p) => (
+                    <ProductCard
+                      key={p._id}
+                      product={p}
+                      onAdd={() => setModalProduct(p)}
+                    />
+                  ))}
+                </CategorySection>
+              ))}
+            </div>
+          )}
         </>
       </main>
 
       <Footer />
+
+      {/* Floating Bottom Cart Bar (Swiggy / Zomato style) */}
+      {itemCount > 0 && (
+        <aside
+          aria-label="Cart summary"
+          className="fixed bottom-3 inset-x-3 z-40 sm:bottom-5 sm:left-auto sm:right-6 sm:w-96 animate-in slide-in-from-bottom-5 duration-300"
+        >
+          <button
+            type="button"
+            onClick={() => setCartOpen(true)}
+            className="flex w-full items-center justify-between gap-3 rounded-2xl bg-linear-to-r from-[#e51b24] via-[#ee2c38] to-[#f58220] p-3 text-white shadow-[0_8px_30px_rgba(229,27,36,0.45)] ring-2 ring-white/20 transition-all hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
+            aria-label={`View cart with ${itemCount} items for ₹${subtotal}`}
+          >
+            <div className="flex items-center gap-2.5 text-left">
+              <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-white/20 font-black text-sm">
+                {itemCount}
+              </span>
+              <div>
+                <p className="text-[10px] uppercase font-extrabold tracking-wider text-white/90 leading-none">
+                  {itemCount === 1 ? "1 Item Added" : `${itemCount} Items Added`}
+                </p>
+                <p className="mt-1 text-base font-black tabular-nums leading-none">
+                  ₹ {subtotal}
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-1.5 rounded-xl bg-white px-3.5 py-2 text-xs font-black uppercase tracking-wide text-[#e51b24] shadow-sm">
+              <span>View Cart</span>
+              <span className="text-sm leading-none font-bold">→</span>
+            </div>
+          </button>
+        </aside>
+      )}
 
       <ScrollToTop />
 
@@ -491,7 +525,7 @@ export function MenuView({
         onClose={() => setCheckoutOpen(false)}
         onSubmit={handleCheckoutSubmit}
       />
-      
+
       {confirmationData && (
         <OrderConfirmationModal
           open={confirmationOpen}

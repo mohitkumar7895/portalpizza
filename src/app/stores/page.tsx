@@ -20,6 +20,7 @@ import {
   ShieldCheck,
   X,
   ArrowLeft,
+  Menu,
 } from "lucide-react";
 import { http } from "@/services/http";
 
@@ -41,6 +42,7 @@ export default function LiveStoresPage() {
   const [qrModalStore, setQrModalStore] = useState<RestaurantItem | null>(null);
   const [originUrl, setOriginUrl] = useState("http://localhost:3000");
   const [theme, setTheme] = useState<"dark" | "light">("dark");
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -105,23 +107,23 @@ export default function LiveStoresPage() {
     <div className={`min-h-screen font-sans transition-colors duration-300 ${isDark ? "bg-[#0a0c10] text-white" : "bg-neutral-50 text-neutral-900"}`}>
       {/* Navbar */}
       <header className={`sticky top-0 z-40 backdrop-blur-xl transition-colors border-b ${isDark ? "bg-[#0a0c10]/90 border-neutral-800/80" : "bg-white/90 border-neutral-200"}`}>
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3.5 sm:px-6">
-          <Link href="/" className="flex items-center gap-2.5 group">
-            <div className="relative h-13 w-13 sm:h-15 sm:w-15 shrink-0 overflow-hidden rounded-full ring-2.5 ring-[#ffde00] bg-white shadow-md group-hover:scale-105 transition">
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-3 py-2.5 sm:px-6 sm:py-3.5">
+          <Link href="/" className="flex items-center gap-2 group min-w-0">
+            <div className="relative h-11 w-11 sm:h-15 sm:w-15 shrink-0 overflow-hidden rounded-full ring-2.5 ring-[#ffde00] bg-white shadow-md group-hover:scale-105 transition">
               <Image
                 src="/kya-khaugey.png"
                 alt="Khaoge Kya?"
                 fill
                 className="object-cover"
-                sizes="(max-width: 640px) 52px, 60px"
+                sizes="(max-width: 640px) 44px, 60px"
                 priority
               />
             </div>
-            <div>
-              <span className={`font-black text-xl tracking-tight block leading-tight ${isDark ? "text-white" : "text-[#0b2545]"}`}>
+            <div className="min-w-0">
+              <span className={`font-black text-lg sm:text-xl tracking-tight block leading-tight truncate ${isDark ? "text-white" : "text-[#0b2545]"}`}>
                 KHA<span className="text-[#e51b24]">OGE</span> KYA<span className="text-[#e51b24]">?</span>
               </span>
-              <span className={`text-[10px] font-bold tracking-wide uppercase ${isDark ? "text-[#ffde00]/90" : "text-[#e51b24]"}`}>
+              <span className={`text-[9px] sm:text-[10px] font-bold tracking-wide uppercase truncate block max-w-[120px] min-[400px]:max-w-none ${isDark ? "text-[#ffde00]/90" : "text-[#e51b24]"}`}>
                 Good Food For Good Moments
               </span>
             </div>
@@ -147,12 +149,12 @@ export default function LiveStoresPage() {
             </Link>
           </nav>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-1.5 sm:gap-3">
             <button
               type="button"
               onClick={toggleTheme}
               title={`Switch to ${isDark ? "Light" : "Dark"} mode`}
-              className={`p-2 rounded-full border transition cursor-pointer ${
+              className={`p-1.5 sm:p-2 rounded-full border transition cursor-pointer ${
                 isDark
                   ? "border-neutral-800 bg-neutral-900 text-amber-300 hover:bg-neutral-800"
                   : "border-neutral-200 bg-white text-neutral-700 hover:bg-neutral-100 shadow-sm"
@@ -163,25 +165,106 @@ export default function LiveStoresPage() {
 
             <Link
               href="/admin/login"
-              className={`inline-flex items-center gap-1.5 rounded-full border px-4 py-2 text-xs font-bold transition ${
+              className={`hidden sm:inline-flex items-center gap-1.5 rounded-full border px-3.5 py-1.5 sm:px-4 sm:py-2 text-xs font-bold transition shadow-xs ${
                 isDark
                   ? "border-neutral-800 bg-neutral-900/80 text-neutral-200 hover:bg-neutral-800"
-                  : "border-neutral-200 bg-white text-neutral-700 hover:bg-neutral-100 shadow-sm"
+                  : "border-neutral-200 bg-white text-neutral-700 hover:bg-neutral-100"
               }`}
             >
               <Lock className="h-3.5 w-3.5 text-neutral-400" />
-              <span>Partner Login</span>
+              <span>Login</span>
             </Link>
 
             <Link
               href="/"
-              className="inline-flex items-center gap-1.5 rounded-full bg-linear-to-r from-[#e60000] to-orange-600 px-4 py-2 text-xs font-bold text-white shadow-md hover:opacity-95 transition"
+              className="inline-flex items-center gap-1 sm:gap-1.5 rounded-full bg-linear-to-r from-[#e60000] to-orange-600 px-3 py-1.5 sm:px-4 sm:py-2 text-xs font-bold text-white shadow-md hover:opacity-95 transition"
             >
               <Store className="h-3.5 w-3.5" />
-              <span>Launch Store</span>
+              <span>Launch</span>
             </Link>
+
+            {/* Mobile Hamburger Menu */}
+            <button
+              type="button"
+              onClick={() => setMobileNavOpen(!mobileNavOpen)}
+              className={`p-1.5 rounded-xl border md:hidden transition cursor-pointer ${
+                isDark
+                  ? "border-neutral-800 bg-neutral-900 text-neutral-300 hover:text-white"
+                  : "border-neutral-200 bg-white text-neutral-700 hover:bg-neutral-100 shadow-xs"
+              }`}
+              aria-label="Toggle navigation menu"
+            >
+              {mobileNavOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            </button>
           </div>
         </div>
+
+        {/* Mobile Navigation Dropdown */}
+        {mobileNavOpen && (
+          <div
+            className={`border-b md:hidden px-4 py-4 space-y-3 transition-all ${
+              isDark
+                ? "bg-[#0d1017] border-neutral-800 text-neutral-200"
+                : "bg-white border-neutral-200 text-neutral-800 shadow-xl"
+            }`}
+          >
+            <div className="flex flex-col gap-1 text-sm font-semibold">
+              <Link
+                href="/"
+                onClick={() => setMobileNavOpen(false)}
+                className="flex items-center gap-2.5 p-2.5 rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800/60 transition"
+              >
+                <Home className="h-4 w-4 text-[#e51b24]" />
+                <span>Home</span>
+              </Link>
+              <Link
+                href="/features"
+                onClick={() => setMobileNavOpen(false)}
+                className="p-2.5 rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800/60 transition"
+              >
+                Features
+              </Link>
+              <Link
+                href="/how-it-works"
+                onClick={() => setMobileNavOpen(false)}
+                className="p-2.5 rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800/60 transition"
+              >
+                How It Works
+              </Link>
+              <Link
+                href="/stores"
+                onClick={() => setMobileNavOpen(false)}
+                className="flex items-center justify-between p-2.5 rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800/60 transition text-[#e60000]"
+              >
+                <div className="flex items-center gap-2">
+                  <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
+                  <span>Live Stores ({restaurants.length})</span>
+                </div>
+                <span className="text-[10px] bg-red-100 dark:bg-red-950/60 text-[#e60000] px-2 py-0.5 rounded-full font-bold">
+                  Active
+                </span>
+              </Link>
+              <Link
+                href="/faq"
+                onClick={() => setMobileNavOpen(false)}
+                className="p-2.5 rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800/60 transition"
+              >
+                FAQs
+              </Link>
+            </div>
+
+            <div className="pt-3 border-t border-neutral-200 dark:border-neutral-800 flex flex-col gap-2">
+              <Link
+                href="/admin/login"
+                onClick={() => setMobileNavOpen(false)}
+                className="flex items-center justify-center gap-2 rounded-xl border border-neutral-200 dark:border-neutral-800 py-2.5 text-xs font-bold text-neutral-800 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition"
+              >
+                <Lock className="h-3.5 w-3.5 text-neutral-400" />
+                <span>Partner Admin Login</span>
+              </Link>
+            </div>
+          </div>
+        )}
       </header>
 
       {/* Main Content */}

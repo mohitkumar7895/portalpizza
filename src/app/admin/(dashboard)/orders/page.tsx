@@ -164,7 +164,7 @@ export default function AdminOrdersPage() {
                   )}
                 </div>
 
-                <div className="px-5 py-4">
+                <div className="px-3.5 sm:px-5 py-3 sm:py-4">
                   <p className="text-xs font-bold uppercase tracking-wide text-neutral-500">
                     Progress (customer view)
                   </p>
@@ -195,24 +195,24 @@ export default function AdminOrdersPage() {
                   </div>
                 </div>
 
-                <ul className="space-y-2 border-t border-neutral-100 px-5 py-4 text-sm">
+                <ul className="space-y-2 border-t border-neutral-100 px-3.5 sm:px-5 py-3 sm:py-4 text-xs sm:text-sm">
                   {o.items.map((it, i) => (
                     <li
                       key={`${it.productId}-${i}`}
                       className="flex justify-between gap-2"
                     >
-                      <span>
+                      <span className="truncate">
                         {it.name}{" "}
                         <span className="text-neutral-500">×{it.quantity}</span>
                       </span>
-                      <span className="tabular-nums text-neutral-700">
+                      <span className="tabular-nums text-neutral-700 shrink-0 font-medium">
                         ₹ {it.price * it.quantity}
                       </span>
                     </li>
                   ))}
                 </ul>
 
-                <div className="flex flex-wrap gap-2 border-t border-neutral-100 bg-neutral-50/80 px-5 py-4">
+                <div className="flex flex-wrap items-center gap-2 border-t border-neutral-100 bg-neutral-50/80 px-3.5 sm:px-5 py-3 sm:py-4">
                   <span
                     className={`mr-auto rounded-full px-3 py-1 text-xs font-bold ${
                       o.status === "pending"

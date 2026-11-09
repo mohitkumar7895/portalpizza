@@ -84,13 +84,13 @@ export function Navbar({
               </>
             ) : (
               <>
-                <p className="font-navbar-brand text-[clamp(1.15rem,3.6vw,1.7rem)] font-black leading-none tracking-tight text-[#0b2545] transition-transform duration-200 group-hover:scale-[1.02] sm:text-[clamp(1.25rem,3.9vw,1.85rem)]">
+                <p className="font-navbar-brand text-[clamp(1.1rem,3.5vw,1.7rem)] font-black leading-none tracking-tight text-[#0b2545] transition-transform duration-200 group-hover:scale-[1.02] sm:text-[clamp(1.25rem,3.9vw,1.85rem)] truncate max-w-[130px] min-[400px]:max-w-[190px] sm:max-w-none">
                   {brand}
                 </p>
                 <div className="mt-1 flex items-center gap-1.5">
-                  <span className="inline-flex items-center gap-1 rounded-full bg-[#ffde00]/25 px-2 py-0.5 text-[9px] font-extrabold uppercase tracking-wide text-[#e51b24] border border-[#ffde00]/80 sm:text-[10.5px]">
-                    <span className="h-1.5 w-1.5 rounded-full bg-[#e51b24] animate-pulse" />
-                    {taglineText}
+                  <span className="inline-flex items-center gap-1 rounded-full bg-[#ffde00]/25 px-2 py-0.5 text-[9px] font-extrabold uppercase tracking-wide text-[#e51b24] border border-[#ffde00]/80 sm:text-[10.5px] max-w-[125px] min-[400px]:max-w-[180px] sm:max-w-none">
+                    <span className="h-1.5 w-1.5 rounded-full bg-[#e51b24] animate-pulse shrink-0" />
+                    <span className="truncate">{taglineText}</span>
                   </span>
                 </div>
               </>

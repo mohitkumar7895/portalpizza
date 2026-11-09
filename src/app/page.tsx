@@ -27,12 +27,14 @@ import {
   ChevronDown,
   LogIn,
   User,
+  Menu,
 } from "lucide-react";
 import { http } from "@/services/http";
 
 export default function PlatformLandingPage() {
   // Theme state
   const [theme, setTheme] = useState<"dark" | "light">("dark");
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
 
   // Modal State for "Launch Store"
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -177,23 +179,23 @@ export default function PlatformLandingPage() {
       <header className={`sticky top-0 z-40 backdrop-blur-xl transition-colors ${
         isDark ? "bg-[#0a0c10]/90 border-b border-neutral-800/60" : "bg-white/90 border-b border-neutral-200/80"
       }`}>
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3.5 sm:px-6">
-          <Link href="/" className="flex items-center gap-2.5 group">
-            <div className="relative h-13 w-13 sm:h-15 sm:w-15 shrink-0 overflow-hidden rounded-full ring-2.5 ring-[#ffde00] bg-white shadow-md group-hover:scale-105 transition">
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-3 py-2.5 sm:px-6 sm:py-3.5">
+          <Link href="/" className="flex items-center gap-2 group min-w-0">
+            <div className="relative h-11 w-11 sm:h-15 sm:w-15 shrink-0 overflow-hidden rounded-full ring-2.5 ring-[#ffde00] bg-white shadow-md group-hover:scale-105 transition">
               <Image
                 src="/kya-khaugey.png"
                 alt="Khaoge Kya?"
                 fill
                 className="object-cover"
-                sizes="(max-width: 640px) 52px, 60px"
+                sizes="(max-width: 640px) 44px, 60px"
                 priority
               />
             </div>
-            <div>
-              <span className={`font-black text-xl tracking-tight block leading-tight ${isDark ? "text-white" : "text-[#0b2545]"}`}>
+            <div className="min-w-0">
+              <span className={`font-black text-lg sm:text-xl tracking-tight block leading-tight truncate ${isDark ? "text-white" : "text-[#0b2545]"}`}>
                 KHA<span className="text-[#e51b24]">OGE</span> KYA<span className="text-[#e51b24]">?</span>
               </span>
-              <span className={`text-[10px] font-bold tracking-wide uppercase ${isDark ? "text-[#ffde00]/90" : "text-[#e51b24]"}`}>
+              <span className={`text-[9px] sm:text-[10px] font-bold tracking-wide uppercase truncate block max-w-[120px] min-[400px]:max-w-none ${isDark ? "text-[#ffde00]/90" : "text-[#e51b24]"}`}>
                 Good Food For Good Moments
               </span>
             </div>
@@ -219,13 +221,13 @@ export default function PlatformLandingPage() {
             </Link>
           </nav>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-1.5 sm:gap-3">
             {/* Dark / Light Theme Toggle */}
             <button
               type="button"
               onClick={toggleTheme}
               title={`Switch to ${isDark ? "Light" : "Dark"} mode`}
-              className={`p-2 rounded-full border transition cursor-pointer ${
+              className={`p-1.5 sm:p-2 rounded-full border transition cursor-pointer ${
                 isDark
                   ? "border-neutral-800 bg-neutral-900 text-amber-300 hover:bg-neutral-800"
                   : "border-neutral-200 bg-white text-neutral-700 hover:bg-neutral-100 shadow-sm"
@@ -237,15 +239,15 @@ export default function PlatformLandingPage() {
             {partnerLoggedIn ? (
               <Link
                 href="/admin"
-                className="inline-flex items-center gap-1.5 rounded-full bg-linear-to-r from-[#e51b24] to-[#f58220] px-4 py-2 text-xs font-bold text-white shadow-md shadow-red-500/25 hover:opacity-95 transition"
+                className="hidden sm:inline-flex items-center gap-1.5 rounded-full bg-linear-to-r from-[#e51b24] to-[#f58220] px-3.5 py-1.5 sm:px-4 sm:py-2 text-xs font-bold text-white shadow-md shadow-red-500/25 hover:opacity-95 transition"
               >
                 <LayoutDashboard className="h-3.5 w-3.5" />
-                <span>Partner Dashboard</span>
+                <span>Dashboard</span>
               </Link>
             ) : (
               <Link
                 href="/admin/login"
-                className={`inline-flex items-center gap-1.5 rounded-full border px-4 py-2 text-xs font-bold transition shadow-xs ${
+                className={`hidden sm:inline-flex items-center gap-1.5 rounded-full border px-3.5 py-1.5 sm:px-4 sm:py-2 text-xs font-bold transition shadow-xs ${
                   isDark
                     ? "border-neutral-800 bg-neutral-900/80 text-neutral-200 hover:bg-neutral-800"
                     : "border-[#0b2545]/20 bg-white text-[#0b2545] hover:text-[#e51b24] hover:border-[#ffde00] hover:bg-[#ffde00]/15"
@@ -263,44 +265,145 @@ export default function PlatformLandingPage() {
                 setRegistrationComplete(false);
                 setIsModalOpen(true);
               }}
-              className="inline-flex items-center gap-1.5 rounded-full bg-linear-to-r from-[#e60000] to-orange-600 px-4 py-2 text-xs font-bold text-white shadow-md shadow-red-500/30 hover:opacity-95 hover:scale-[1.02] transition cursor-pointer"
+              className="inline-flex items-center gap-1 sm:gap-1.5 rounded-full bg-linear-to-r from-[#e60000] to-orange-600 px-3 py-1.5 sm:px-4 sm:py-2 text-xs font-bold text-white shadow-md shadow-red-500/30 hover:opacity-95 hover:scale-[1.02] transition cursor-pointer"
             >
               <Store className="h-3.5 w-3.5" />
-              <span>Launch Store</span>
+              <span>Launch</span>
+            </button>
+
+            {/* Mobile Hamburger Toggle Button */}
+            <button
+              type="button"
+              onClick={() => setMobileNavOpen(!mobileNavOpen)}
+              className={`p-1.5 rounded-xl border md:hidden transition cursor-pointer ${
+                isDark
+                  ? "border-neutral-800 bg-neutral-900 text-neutral-300 hover:text-white"
+                  : "border-neutral-200 bg-white text-neutral-700 hover:bg-neutral-100 shadow-xs"
+              }`}
+              aria-label="Toggle navigation menu"
+            >
+              {mobileNavOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
             </button>
           </div>
         </div>
+
+        {/* Mobile Navigation Dropdown Menu */}
+        {mobileNavOpen && (
+          <div
+            className={`border-b md:hidden px-4 py-4 space-y-3 transition-all ${
+              isDark
+                ? "bg-[#0d1017] border-neutral-800 text-neutral-200"
+                : "bg-white border-neutral-200 text-neutral-800 shadow-xl"
+            }`}
+          >
+            <div className="flex flex-col gap-1 text-sm font-semibold">
+              <Link
+                href="/"
+                onClick={() => setMobileNavOpen(false)}
+                className="flex items-center gap-2.5 p-2.5 rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800/60 transition"
+              >
+                <Home className="h-4 w-4 text-[#e51b24]" />
+                <span>Home</span>
+              </Link>
+              <Link
+                href="/features"
+                onClick={() => setMobileNavOpen(false)}
+                className="p-2.5 rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800/60 transition"
+              >
+                Features
+              </Link>
+              <Link
+                href="/how-it-works"
+                onClick={() => setMobileNavOpen(false)}
+                className="p-2.5 rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800/60 transition"
+              >
+                How It Works
+              </Link>
+              <Link
+                href="/stores"
+                onClick={() => setMobileNavOpen(false)}
+                className="flex items-center justify-between p-2.5 rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800/60 transition text-[#e60000]"
+              >
+                <div className="flex items-center gap-2">
+                  <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
+                  <span>Live Stores</span>
+                </div>
+                <span className="text-[10px] bg-red-100 dark:bg-red-950/60 text-[#e60000] px-2 py-0.5 rounded-full font-bold">
+                  Browse
+                </span>
+              </Link>
+              <Link
+                href="/faq"
+                onClick={() => setMobileNavOpen(false)}
+                className="p-2.5 rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800/60 transition"
+              >
+                FAQs
+              </Link>
+            </div>
+
+            <div className="pt-3 border-t border-neutral-200 dark:border-neutral-800 flex flex-col gap-2">
+              <Link
+                href="/admin/login"
+                onClick={() => setMobileNavOpen(false)}
+                className="flex items-center justify-center gap-2 rounded-xl border border-neutral-200 dark:border-neutral-800 py-2.5 text-xs font-bold text-neutral-800 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition"
+              >
+                <LogIn className="h-3.5 w-3.5 text-[#e51b24]" />
+                <span>Partner Admin Login</span>
+              </Link>
+              <button
+                type="button"
+                onClick={() => {
+                  setMobileNavOpen(false);
+                  setRegistrationComplete(false);
+                  setIsModalOpen(true);
+                }}
+                className="flex items-center justify-center gap-2 rounded-xl bg-linear-to-r from-[#e60000] to-orange-600 py-2.5 text-xs font-bold text-white shadow-md shadow-red-500/30 transition cursor-pointer"
+              >
+                <Store className="h-3.5 w-3.5" />
+                <span>Launch Restaurant Store</span>
+              </button>
+            </div>
+          </div>
+        )}
       </header>
 
       {/* Hero Section: Image ON TOP, Headline & Action Buttons BELOW */}
-      <section className="relative overflow-hidden pt-6 pb-20 md:pt-10 md:pb-24">
+      <section className="relative overflow-hidden pt-4 pb-8 sm:pt-6 sm:pb-12 md:pt-8 md:pb-14">
         {/* Ambient background glow effects */}
         <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] bg-red-600/10 blur-[160px] pointer-events-none rounded-full" />
         <div className="absolute top-1/3 right-1/4 w-[450px] h-[280px] bg-orange-600/10 blur-[140px] pointer-events-none rounded-full" />
 
-        <div className="relative mx-auto max-w-7xl px-4 sm:px-6">
+        <div className="relative mx-auto max-w-7xl px-3 sm:px-6">
           {/* 1. Full-Width Visual Showcase Banner Image ON TOP */}
           <div className="mx-auto max-w-5xl relative">
-            <div className={`relative group rounded-3xl p-2 sm:p-3 shadow-2xl backdrop-blur-md overflow-hidden border ${
+            <div className={`relative group rounded-2xl sm:rounded-3xl p-1.5 sm:p-3 shadow-xl sm:shadow-2xl backdrop-blur-md overflow-hidden border ${
               isDark ? "bg-neutral-900/70 border-neutral-800/80 shadow-black/80" : "bg-white/80 border-neutral-200 shadow-xl"
             }`}>
               {/* Top gradient highlight bar */}
-              <div className="absolute top-0 left-0 right-0 h-1 bg-linear-to-r from-red-600 via-orange-500 to-amber-400 rounded-t-3xl" />
+              <div className="absolute top-0 left-0 right-0 h-1 bg-linear-to-r from-red-600 via-orange-500 to-amber-400 rounded-t-2xl sm:rounded-t-3xl" />
 
               {/* The Cinematic High-Tech Visual Banner */}
-              <div className={`relative aspect-16/9 sm:aspect-21/9 w-full overflow-hidden rounded-2xl border ${
+              <div className={`relative aspect-16/9 sm:aspect-21/9 w-full overflow-hidden rounded-xl sm:rounded-2xl border ${
                 isDark ? "border-neutral-800/90 bg-neutral-950" : "border-neutral-200 bg-neutral-100"
               }`}>
                 <img
                   src="/partner-platform-hero.jpg"
-                  alt=""
+                  alt="Partner Platform Showcase"
                   className="h-full w-full object-cover object-center group-hover:scale-[1.02] transition-transform duration-700"
                 />
                 <div className={`absolute inset-0 ${isDark ? "bg-linear-to-t from-neutral-950/70 via-transparent to-neutral-950/20" : "bg-linear-to-t from-neutral-900/30 via-transparent to-transparent"}`} />
+
+                {/* Mobile top pill badge */}
+                <div className="absolute top-2.5 left-2.5 sm:hidden">
+                  <span className="inline-flex items-center gap-1 rounded-full bg-black/75 border border-white/15 px-2.5 py-0.5 text-[10px] font-bold text-white backdrop-blur-md shadow-xs">
+                    <Sparkles className="h-3 w-3 text-amber-400" />
+                    <span>Restaurant Partner Hub</span>
+                  </span>
+                </div>
               </div>
 
-              {/* Floating Bottom Action Bar */}
-              <div className={`absolute bottom-4 left-4 right-4 z-20 flex flex-col sm:flex-row items-center justify-between gap-3 rounded-2xl p-3 sm:px-5 sm:py-3 shadow-2xl backdrop-blur-md border ${
+              {/* Floating Action Bar (Shown on tablet/desktop, clean and non-blocking) */}
+              <div className={`hidden sm:flex absolute bottom-4 left-4 right-4 z-20 flex-row items-center justify-between gap-3 rounded-2xl px-4 py-2.5 md:px-5 md:py-3 shadow-2xl backdrop-blur-md border ${
                 isDark ? "bg-neutral-950/95 border-neutral-800/90" : "bg-white/95 border-neutral-200"
               }`}>
                 <div className="flex items-center gap-3">
@@ -323,10 +426,10 @@ export default function PlatformLandingPage() {
                     setRegistrationComplete(false);
                     setIsModalOpen(true);
                   }}
-                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-xl bg-linear-to-r from-[#e60000] to-orange-600 px-4 py-2 text-xs font-bold text-white shadow-lg hover:opacity-90 transition cursor-pointer"
+                  className="inline-flex items-center justify-center gap-2 rounded-xl bg-linear-to-r from-[#e60000] to-orange-600 px-4 py-2 text-xs font-bold text-white shadow-lg hover:opacity-90 transition cursor-pointer"
                 >
                   <Store className="h-3.5 w-3.5" />
-                  <span>Launch My Restaurant Store</span>
+                  <span>Launch Restaurant Store</span>
                   <ArrowRight className="h-3.5 w-3.5" />
                 </button>
               </div>
@@ -334,8 +437,8 @@ export default function PlatformLandingPage() {
           </div>
 
           {/* 2. Headline & Action Buttons BELOW the Image */}
-          <div className="mt-10 sm:mt-14 mx-auto max-w-5xl text-center space-y-4">
-            <h1 className="text-3xl font-extrabold tracking-tight sm:text-4xl md:text-5xl lg:text-6xl leading-[1.2]">
+          <div className="mt-5 sm:mt-8 md:mt-10 mx-auto max-w-5xl text-center space-y-3 sm:space-y-4">
+            <h1 className="text-2xl font-black tracking-tight sm:text-4xl md:text-5xl lg:text-6xl leading-[1.2]">
               <span className={`block whitespace-normal sm:whitespace-nowrap drop-shadow-sm ${isDark ? "text-white" : "text-neutral-900"}`}>
                 Launch Your Branded Restaurant Store
               </span>
@@ -344,19 +447,19 @@ export default function PlatformLandingPage() {
               </span>
             </h1>
 
-            <p className={`text-sm sm:text-base max-w-xl mx-auto leading-relaxed ${isDark ? "text-neutral-300" : "text-neutral-600"}`}>
+            <p className={`text-xs sm:text-base max-w-xl mx-auto leading-relaxed ${isDark ? "text-neutral-300" : "text-neutral-600"}`}>
               Get your custom ordering link (<span className="text-orange-500 font-mono font-bold">/[your-slug]</span>) and a dedicated live kitchen admin dashboard. Direct orders with 100% profit.
             </p>
 
             {/* Action Buttons */}
-            <div className="flex flex-wrap items-center justify-center gap-3.5 pt-2">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-2.5 sm:gap-3.5 pt-1.5 sm:pt-2">
               <button
                 type="button"
                 onClick={() => {
                   setRegistrationComplete(false);
                   setIsModalOpen(true);
                 }}
-                className="inline-flex items-center gap-2 rounded-full bg-linear-to-r from-[#e60000] to-orange-600 px-7 py-3.5 text-sm font-bold text-white shadow-xl shadow-red-600/30 hover:scale-105 transition cursor-pointer"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-full bg-linear-to-r from-[#e60000] to-orange-600 px-6 sm:px-7 py-3 sm:py-3.5 text-xs sm:text-sm font-bold text-white shadow-xl shadow-red-600/30 hover:scale-105 active:scale-95 transition cursor-pointer"
               >
                 <Store className="h-4 w-4" />
                 <span>Launch Your Store (Free)</span>
@@ -365,7 +468,7 @@ export default function PlatformLandingPage() {
 
               <Link
                 href="/pizzahub"
-                className={`inline-flex items-center gap-2 rounded-full border px-6 py-3.5 text-sm font-bold shadow-sm transition ${
+                className={`w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-full border px-5 sm:px-6 py-3 sm:py-3.5 text-xs sm:text-sm font-bold shadow-sm active:scale-95 transition ${
                   isDark
                     ? "border-neutral-700 bg-neutral-900/80 text-neutral-200 hover:bg-neutral-800"
                     : "border-neutral-300 bg-white text-neutral-800 hover:bg-neutral-100"
@@ -380,73 +483,73 @@ export default function PlatformLandingPage() {
       </section>
 
       {/* Quick Nav Cards: Direct Links to Dedicated Pages */}
-      <section className="py-12">
-        <div className="mx-auto max-w-6xl px-4 sm:px-6">
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <section className="py-6 sm:py-8 md:py-10">
+        <div className="mx-auto max-w-6xl px-3 sm:px-6">
+          <div className="grid grid-cols-2 gap-2.5 sm:gap-4 lg:grid-cols-4">
             <Link
               href="/features"
-              className={`p-5 rounded-3xl border transition-all duration-200 hover:scale-[1.02] group ${
+              className={`p-3.5 sm:p-5 rounded-2xl sm:rounded-3xl border transition-all duration-200 hover:scale-[1.02] group ${
                 isDark ? "bg-[#11131a] border-neutral-800/80 hover:border-red-500/40" : "bg-white border-neutral-200 hover:border-red-500/40 shadow-sm"
               }`}
             >
-              <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-red-600/15 text-[#e60000] mb-3">
-                <Store className="h-5 w-5" />
+              <div className="flex h-8 w-8 sm:h-10 sm:w-10 items-center justify-center rounded-xl sm:rounded-2xl bg-red-600/15 text-[#e60000] mb-2 sm:mb-3">
+                <Store className="h-4 w-4 sm:h-5 sm:w-5" />
               </div>
-              <h3 className={`font-black text-base group-hover:text-red-500 transition ${isDark ? "text-white" : "text-neutral-900"}`}>
+              <h3 className={`font-black text-xs sm:text-base group-hover:text-red-500 transition ${isDark ? "text-white" : "text-neutral-900"}`}>
                 Platform Features →
               </h3>
-              <p className={`text-xs mt-1 leading-relaxed ${isDark ? "text-neutral-400" : "text-neutral-600"}`}>
+              <p className={`line-clamp-2 text-[10px] sm:text-xs mt-1 leading-relaxed ${isDark ? "text-neutral-400" : "text-neutral-600"}`}>
                 Explore the customer storefront, kitchen display, and menu manager.
               </p>
             </Link>
 
             <Link
               href="/how-it-works"
-              className={`p-5 rounded-3xl border transition-all duration-200 hover:scale-[1.02] group ${
+              className={`p-3.5 sm:p-5 rounded-2xl sm:rounded-3xl border transition-all duration-200 hover:scale-[1.02] group ${
                 isDark ? "bg-[#11131a] border-neutral-800/80 hover:border-orange-500/40" : "bg-white border-neutral-200 hover:border-orange-500/40 shadow-sm"
               }`}
             >
-              <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-orange-600/15 text-orange-500 mb-3">
-                <ChefHat className="h-5 w-5" />
+              <div className="flex h-8 w-8 sm:h-10 sm:w-10 items-center justify-center rounded-xl sm:rounded-2xl bg-orange-600/15 text-orange-500 mb-2 sm:mb-3">
+                <ChefHat className="h-4 w-4 sm:h-5 sm:w-5" />
               </div>
-              <h3 className={`font-black text-base group-hover:text-orange-500 transition ${isDark ? "text-white" : "text-neutral-900"}`}>
+              <h3 className={`font-black text-xs sm:text-base group-hover:text-orange-500 transition ${isDark ? "text-white" : "text-neutral-900"}`}>
                 How It Works →
               </h3>
-              <p className={`text-xs mt-1 leading-relaxed ${isDark ? "text-neutral-400" : "text-neutral-600"}`}>
+              <p className={`line-clamp-2 text-[10px] sm:text-xs mt-1 leading-relaxed ${isDark ? "text-neutral-400" : "text-neutral-600"}`}>
                 Simple 3-step setup: register, get verified, and take direct orders.
               </p>
             </Link>
 
             <Link
               href="/stores"
-              className={`p-5 rounded-3xl border transition-all duration-200 hover:scale-[1.02] group ${
+              className={`p-3.5 sm:p-5 rounded-2xl sm:rounded-3xl border transition-all duration-200 hover:scale-[1.02] group ${
                 isDark ? "bg-[#11131a] border-neutral-800/80 hover:border-emerald-500/40" : "bg-white border-neutral-200 hover:border-emerald-500/40 shadow-sm"
               }`}
             >
-              <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-emerald-600/15 text-emerald-500 mb-3">
-                <UtensilsCrossed className="h-5 w-5" />
+              <div className="flex h-8 w-8 sm:h-10 sm:w-10 items-center justify-center rounded-xl sm:rounded-2xl bg-emerald-600/15 text-emerald-500 mb-2 sm:mb-3">
+                <UtensilsCrossed className="h-4 w-4 sm:h-5 sm:w-5" />
               </div>
-              <h3 className={`font-black text-base group-hover:text-emerald-500 transition ${isDark ? "text-white" : "text-neutral-900"}`}>
+              <h3 className={`font-black text-xs sm:text-base group-hover:text-emerald-500 transition ${isDark ? "text-white" : "text-neutral-900"}`}>
                 Live Stores Directory →
               </h3>
-              <p className={`text-xs mt-1 leading-relaxed ${isDark ? "text-neutral-400" : "text-neutral-600"}`}>
+              <p className={`line-clamp-2 text-[10px] sm:text-xs mt-1 leading-relaxed ${isDark ? "text-neutral-400" : "text-neutral-600"}`}>
                 Browse active restaurant partner storefronts and table QR codes.
               </p>
             </Link>
 
             <Link
               href="/faq"
-              className={`p-5 rounded-3xl border transition-all duration-200 hover:scale-[1.02] group ${
+              className={`p-3.5 sm:p-5 rounded-2xl sm:rounded-3xl border transition-all duration-200 hover:scale-[1.02] group ${
                 isDark ? "bg-[#11131a] border-neutral-800/80 hover:border-purple-500/40" : "bg-white border-neutral-200 hover:border-purple-500/40 shadow-sm"
               }`}
             >
-              <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-purple-600/15 text-purple-400 mb-3">
-                <ShieldCheck className="h-5 w-5" />
+              <div className="flex h-8 w-8 sm:h-10 sm:w-10 items-center justify-center rounded-xl sm:rounded-2xl bg-purple-600/15 text-purple-400 mb-2 sm:mb-3">
+                <ShieldCheck className="h-4 w-4 sm:h-5 sm:w-5" />
               </div>
-              <h3 className={`font-black text-base group-hover:text-purple-400 transition ${isDark ? "text-white" : "text-neutral-900"}`}>
+              <h3 className={`font-black text-xs sm:text-base group-hover:text-purple-400 transition ${isDark ? "text-white" : "text-neutral-900"}`}>
                 Got Questions? →
               </h3>
-              <p className={`text-xs mt-1 leading-relaxed ${isDark ? "text-neutral-400" : "text-neutral-600"}`}>
+              <p className={`line-clamp-2 text-[10px] sm:text-xs mt-1 leading-relaxed ${isDark ? "text-neutral-400" : "text-neutral-600"}`}>
                 Read answers about 0% commission, domains, and data isolation.
               </p>
             </Link>
@@ -455,29 +558,29 @@ export default function PlatformLandingPage() {
       </section>
 
       {/* CTA Section (No harsh borders, smooth transition) */}
-      <section className="py-16">
-        <div className="mx-auto max-w-4xl px-4 sm:px-6 text-center space-y-4">
+      <section className="py-6 sm:py-10">
+        <div className="mx-auto max-w-4xl px-3 sm:px-6 text-center space-y-3 sm:space-y-4">
           <div className="inline-flex items-center gap-2 rounded-full border border-red-500/30 bg-red-950/20 px-3.5 py-1 text-xs font-bold text-red-400">
             <ChefHat className="h-3.5 w-3.5 text-[#e60000]" />
             <span>Join Forward-Thinking Restaurant Partners</span>
           </div>
 
-          <h2 className={`text-3xl sm:text-4xl font-black tracking-tight ${isDark ? "text-white" : "text-neutral-900"}`}>
+          <h2 className={`text-2xl sm:text-4xl font-black tracking-tight ${isDark ? "text-white" : "text-neutral-900"}`}>
             Ready to Take Your Restaurant Online?
           </h2>
 
-          <p className={`text-sm sm:text-base max-w-xl mx-auto leading-relaxed ${isDark ? "text-neutral-300" : "text-neutral-600"}`}>
+          <p className={`text-xs sm:text-base max-w-xl mx-auto leading-relaxed ${isDark ? "text-neutral-300" : "text-neutral-600"}`}>
             Register today and launch your branded food ordering website and kitchen admin dashboard in just 2 minutes!
           </p>
 
-          <div className="pt-2 flex flex-wrap items-center justify-center gap-3.5">
+          <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-2.5 sm:gap-3.5">
             <button
               type="button"
               onClick={() => {
                 setRegistrationComplete(false);
                 setIsModalOpen(true);
               }}
-              className="inline-flex items-center gap-2 rounded-full bg-linear-to-r from-[#e60000] to-orange-600 px-7 py-3.5 text-sm font-bold text-white shadow-xl shadow-red-600/30 hover:scale-105 transition cursor-pointer"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-full bg-linear-to-r from-[#e60000] to-orange-600 px-6 sm:px-7 py-3 sm:py-3.5 text-xs sm:text-sm font-bold text-white shadow-xl shadow-red-600/30 hover:scale-105 active:scale-95 transition cursor-pointer"
             >
               <Store className="h-4 w-4" />
               <span>Launch Your Store Now (Free)</span>
@@ -486,7 +589,7 @@ export default function PlatformLandingPage() {
 
             <Link
               href="/admin/login"
-              className={`inline-flex items-center gap-2 rounded-full border px-6 py-3.5 text-sm font-bold transition ${
+              className={`w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-full border px-5 sm:px-6 py-3 sm:py-3.5 text-xs sm:text-sm font-bold active:scale-95 transition ${
                 isDark ? "border-neutral-700 bg-neutral-900/90 text-neutral-200 hover:bg-neutral-800" : "border-neutral-300 bg-white text-neutral-800 hover:bg-neutral-100"
               }`}
             >
@@ -498,14 +601,14 @@ export default function PlatformLandingPage() {
       </section>
 
       {/* 3 Food Categories Showcase Section (Pizzas, Snacks, Meals/Khana Bagera) */}
-      <section className="py-16">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 space-y-10">
-          <div className="text-center max-w-3xl mx-auto space-y-3">
+      <section className="py-6 sm:py-10">
+        <div className="mx-auto max-w-7xl px-3 sm:px-6 space-y-6 sm:space-y-8">
+          <div className="text-center max-w-3xl mx-auto space-y-2 sm:space-y-3">
             <span className="inline-flex items-center gap-1.5 rounded-full bg-orange-500/10 border border-orange-500/20 text-orange-500 px-3.5 py-1 text-xs font-bold uppercase tracking-wider">
               <Sparkles className="h-3.5 w-3.5" />
               Built for Every Restaurant Concept
             </span>
-            <h2 className={`text-3xl sm:text-4xl font-black tracking-tight ${isDark ? "text-white" : "text-neutral-900"}`}>
+            <h2 className={`text-2xl sm:text-4xl font-black tracking-tight ${isDark ? "text-white" : "text-neutral-900"}`}>
               Pizzas, Snacks, Burgers & Full-Course Meals
             </h2>
             <p className={`text-xs sm:text-sm max-w-xl mx-auto leading-relaxed ${isDark ? "text-neutral-400" : "text-neutral-600"}`}>
@@ -513,9 +616,9 @@ export default function PlatformLandingPage() {
             </p>
           </div>
 
-          <div className="grid gap-6 md:grid-cols-3">
+          <div className="grid gap-4 sm:gap-6 md:grid-cols-3">
             {/* Card 1: Pizzas & Italian */}
-            <div className={`rounded-3xl border overflow-hidden shadow-xl transition-all duration-300 hover:scale-[1.02] flex flex-col justify-between group ${
+            <div className={`rounded-2xl sm:rounded-3xl border overflow-hidden shadow-lg sm:shadow-xl transition-all duration-300 hover:scale-[1.02] flex flex-col justify-between group ${
               isDark ? "bg-[#11131a] border-neutral-800" : "bg-white border-neutral-200"
             }`}>
               <div>
@@ -526,20 +629,20 @@ export default function PlatformLandingPage() {
                     className="h-full w-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
                   />
                   <div className="absolute top-3 left-3">
-                    <span className="inline-flex items-center gap-1 rounded-full bg-red-950/90 border border-red-700/80 px-3 py-1 text-[11px] font-bold text-red-300 backdrop-blur-md">
+                    <span className="inline-flex items-center gap-1 rounded-full bg-red-950/90 border border-red-700/80 px-2.5 sm:px-3 py-1 text-[10px] sm:text-[11px] font-bold text-red-300 backdrop-blur-md">
                       🍕 Pizzerias & Italian
                     </span>
                   </div>
                 </div>
 
-                <div className="p-6 space-y-2">
-                  <h3 className={`font-black text-xl ${isDark ? "text-white" : "text-neutral-900"}`}>
+                <div className="p-4 sm:p-6 space-y-2">
+                  <h3 className={`font-black text-lg sm:text-xl ${isDark ? "text-white" : "text-neutral-900"}`}>
                     Pizzas, Crusts & Italian Bistros
                   </h3>
                   <p className={`text-xs leading-relaxed ${isDark ? "text-neutral-400" : "text-neutral-600"}`}>
                     Designed for artisan pizzerias & cloud kitchens. Supports crust customization (Cheese Burst, Thin Crust), gourmet toppings, and size pricing (Regular, Medium, Large).
                   </p>
-                  <ul className={`text-[11px] space-y-1.5 pt-2 ${isDark ? "text-neutral-300" : "text-neutral-700"}`}>
+                  <ul className={`text-[11px] space-y-1.5 pt-1.5 ${isDark ? "text-neutral-300" : "text-neutral-700"}`}>
                     <li className="flex items-center gap-1.5">
                       <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500 shrink-0" />
                       <span>Veg & Non-Veg badge tagging</span>
@@ -552,10 +655,10 @@ export default function PlatformLandingPage() {
                 </div>
               </div>
 
-              <div className="p-6 pt-0">
+              <div className="p-4 pt-0 sm:p-6 sm:pt-0">
                 <Link
                   href="/pizzahub"
-                  className="w-full inline-flex items-center justify-center gap-1.5 rounded-xl bg-linear-to-r from-[#e60000] to-orange-600 py-2.5 text-xs font-bold text-white shadow-md hover:opacity-95 transition"
+                  className="w-full inline-flex items-center justify-center gap-1.5 rounded-xl bg-linear-to-r from-[#e60000] to-orange-600 py-2.5 text-xs font-bold text-white shadow-md hover:opacity-95 active:scale-95 transition"
                 >
                   <span>Explore Pizza Demo</span>
                   <ArrowRight className="h-3.5 w-3.5" />
@@ -564,7 +667,7 @@ export default function PlatformLandingPage() {
             </div>
 
             {/* Card 2: Snacks, Burgers & Fast Food */}
-            <div className={`rounded-3xl border overflow-hidden shadow-xl transition-all duration-300 hover:scale-[1.02] flex flex-col justify-between group ${
+            <div className={`rounded-2xl sm:rounded-3xl border overflow-hidden shadow-lg sm:shadow-xl transition-all duration-300 hover:scale-[1.02] flex flex-col justify-between group ${
               isDark ? "bg-[#11131a] border-neutral-800" : "bg-white border-neutral-200"
             }`}>
               <div>
@@ -575,20 +678,20 @@ export default function PlatformLandingPage() {
                     className="h-full w-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
                   />
                   <div className="absolute top-3 left-3">
-                    <span className="inline-flex items-center gap-1 rounded-full bg-orange-950/90 border border-orange-700/80 px-3 py-1 text-[11px] font-bold text-orange-300 backdrop-blur-md">
+                    <span className="inline-flex items-center gap-1 rounded-full bg-orange-950/90 border border-orange-700/80 px-2.5 sm:px-3 py-1 text-[10px] sm:text-[11px] font-bold text-orange-300 backdrop-blur-md">
                       🍔 Cafes & Fast Food
                     </span>
                   </div>
                 </div>
 
-                <div className="p-6 space-y-2">
-                  <h3 className={`font-black text-xl ${isDark ? "text-white" : "text-neutral-900"}`}>
+                <div className="p-4 sm:p-6 space-y-2">
+                  <h3 className={`font-black text-lg sm:text-xl ${isDark ? "text-white" : "text-neutral-900"}`}>
                     Burgers, Snacks & Quick Bites
                   </h3>
                   <p className={`text-xs leading-relaxed ${isDark ? "text-neutral-400" : "text-neutral-600"}`}>
                     Engineered for quick-service burger points, cafe snack bars, loaded fries, cold shakes, and wraps. Ultra-fast add-to-cart and speedy checkout flow.
                   </p>
-                  <ul className={`text-[11px] space-y-1.5 pt-2 ${isDark ? "text-neutral-300" : "text-neutral-700"}`}>
+                  <ul className={`text-[11px] space-y-1.5 pt-1.5 ${isDark ? "text-neutral-300" : "text-neutral-700"}`}>
                     <li className="flex items-center gap-1.5">
                       <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500 shrink-0" />
                       <span>Meal combos & beverage pairing</span>
@@ -601,14 +704,14 @@ export default function PlatformLandingPage() {
                 </div>
               </div>
 
-              <div className="p-6 pt-0">
+              <div className="p-4 pt-0 sm:p-6 sm:pt-0">
                 <button
                   type="button"
                   onClick={() => {
                     setRegistrationComplete(false);
                     setIsModalOpen(true);
                   }}
-                  className={`w-full inline-flex items-center justify-center gap-1.5 rounded-xl border py-2.5 text-xs font-bold transition cursor-pointer ${
+                  className={`w-full inline-flex items-center justify-center gap-1.5 rounded-xl border py-2.5 text-xs font-bold transition active:scale-95 cursor-pointer ${
                     isDark ? "border-neutral-700 bg-neutral-900 text-white hover:bg-neutral-800" : "border-neutral-300 bg-neutral-100 text-neutral-800 hover:bg-neutral-200"
                   }`}
                 >
@@ -619,7 +722,7 @@ export default function PlatformLandingPage() {
             </div>
 
             {/* Card 3: Multi-Cuisine Meals ("Khana Bagera") */}
-            <div className={`rounded-3xl border overflow-hidden shadow-xl transition-all duration-300 hover:scale-[1.02] flex flex-col justify-between group ${
+            <div className={`rounded-2xl sm:rounded-3xl border overflow-hidden shadow-lg sm:shadow-xl transition-all duration-300 hover:scale-[1.02] flex flex-col justify-between group ${
               isDark ? "bg-[#11131a] border-neutral-800" : "bg-white border-neutral-200"
             }`}>
               <div>
@@ -630,20 +733,20 @@ export default function PlatformLandingPage() {
                     className="h-full w-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
                   />
                   <div className="absolute top-3 left-3">
-                    <span className="inline-flex items-center gap-1 rounded-full bg-emerald-950/90 border border-emerald-700/80 px-3 py-1 text-[11px] font-bold text-emerald-300 backdrop-blur-md">
+                    <span className="inline-flex items-center gap-1 rounded-full bg-emerald-950/90 border border-emerald-700/80 px-2.5 sm:px-3 py-1 text-[10px] sm:text-[11px] font-bold text-emerald-300 backdrop-blur-md">
                       🍛 Meals & Dining ("Khana")
                     </span>
                   </div>
                 </div>
 
-                <div className="p-6 space-y-2">
-                  <h3 className={`font-black text-xl ${isDark ? "text-white" : "text-neutral-900"}`}>
+                <div className="p-4 sm:p-6 space-y-2">
+                  <h3 className={`font-black text-lg sm:text-xl ${isDark ? "text-white" : "text-neutral-900"}`}>
                     Meals, Curries & Fine Dining
                   </h3>
                   <p className={`text-xs leading-relaxed ${isDark ? "text-neutral-400" : "text-neutral-600"}`}>
                     Ideal for full-service family dining restaurants, dhaba eateries, and multi-cuisine kitchens serving fragrant biryanis, gravies, thalis, and tandoori specials.
                   </p>
-                  <ul className={`text-[11px] space-y-1.5 pt-2 ${isDark ? "text-neutral-300" : "text-neutral-700"}`}>
+                  <ul className={`text-[11px] space-y-1.5 pt-1.5 ${isDark ? "text-neutral-300" : "text-neutral-700"}`}>
                     <li className="flex items-center gap-1.5">
                       <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500 shrink-0" />
                       <span>Full multi-course category menus</span>
@@ -656,14 +759,14 @@ export default function PlatformLandingPage() {
                 </div>
               </div>
 
-              <div className="p-6 pt-0">
+              <div className="p-4 pt-0 sm:p-6 sm:pt-0">
                 <button
                   type="button"
                   onClick={() => {
                     setRegistrationComplete(false);
                     setIsModalOpen(true);
                   }}
-                  className={`w-full inline-flex items-center justify-center gap-1.5 rounded-xl border py-2.5 text-xs font-bold transition cursor-pointer ${
+                  className={`w-full inline-flex items-center justify-center gap-1.5 rounded-xl border py-2.5 text-xs font-bold transition active:scale-95 cursor-pointer ${
                     isDark ? "border-neutral-700 bg-neutral-900 text-white hover:bg-neutral-800" : "border-neutral-300 bg-neutral-100 text-neutral-800 hover:bg-neutral-200"
                   }`}
                 >
@@ -677,13 +780,13 @@ export default function PlatformLandingPage() {
       </section>
 
       {/* Testimonials Section (Loved by Restaurant Owners) */}
-      <section className="py-16">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 space-y-10">
-          <div className="text-center max-w-2xl mx-auto space-y-3">
+      <section className="py-6 sm:py-10">
+        <div className="mx-auto max-w-7xl px-3 sm:px-6 space-y-6 sm:space-y-8">
+          <div className="text-center max-w-2xl mx-auto space-y-2 sm:space-y-3">
             <span className="inline-flex items-center gap-1 rounded-full bg-red-500/10 border border-red-500/20 text-[#e60000] px-3.5 py-1 text-xs font-bold uppercase tracking-wider">
               Partner Success Stories
             </span>
-            <h2 className={`text-3xl sm:text-4xl font-black tracking-tight ${isDark ? "text-white" : "text-neutral-900"}`}>
+            <h2 className={`text-2xl sm:text-4xl font-black tracking-tight ${isDark ? "text-white" : "text-neutral-900"}`}>
               Loved by Restaurant Owners
             </h2>
             <p className={`text-xs sm:text-sm max-w-lg mx-auto leading-relaxed ${isDark ? "text-neutral-400" : "text-neutral-600"}`}>
@@ -691,75 +794,75 @@ export default function PlatformLandingPage() {
             </p>
           </div>
 
-          <div className="grid gap-6 md:grid-cols-3">
-            <div className={`p-6 rounded-3xl border shadow-xl flex flex-col justify-between transition-colors ${
+          <div className="grid gap-4 sm:gap-6 md:grid-cols-3">
+            <div className={`p-4 sm:p-6 rounded-2xl sm:rounded-3xl border shadow-lg sm:shadow-xl flex flex-col justify-between transition-colors ${
               isDark ? "bg-[#12141c] border-neutral-800" : "bg-white border-neutral-200"
             }`}>
               <div>
-                <div className="flex items-center gap-1 text-amber-400 mb-3">
+                <div className="flex items-center gap-1 text-amber-400 mb-2 sm:mb-3">
                   {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="h-4 w-4 fill-amber-400" />
+                    <Star key={i} className="h-3.5 w-3.5 sm:h-4 sm:w-4 fill-amber-400" />
                   ))}
                 </div>
                 <p className={`text-xs sm:text-sm leading-relaxed italic ${isDark ? "text-neutral-300" : "text-neutral-700"}`}>
                   "We were paying over ₹40,000 every month in commissions to delivery apps. Launching our own store link cut our aggregator dependence dramatically. We now get 60% of our orders directly on our custom link with 0% commission!"
                 </p>
               </div>
-              <div className="mt-6 pt-4 border-t border-neutral-500/10 flex items-center gap-3">
-                <div className="h-10 w-10 rounded-full bg-red-600/20 text-[#e60000] font-bold flex items-center justify-center">
+              <div className="mt-4 sm:mt-6 pt-3 sm:pt-4 border-t border-neutral-500/10 flex items-center gap-3">
+                <div className="h-9 w-9 sm:h-10 sm:w-10 rounded-full bg-red-600/20 text-[#e60000] text-xs sm:text-sm font-bold flex items-center justify-center">
                   RP
                 </div>
                 <div>
                   <p className={`text-xs font-bold ${isDark ? "text-white" : "text-neutral-900"}`}>Rahul Patel</p>
-                  <p className="text-[11px] text-neutral-400">Founder, Royal Pizza Hub</p>
+                  <p className="text-[10px] sm:text-[11px] text-neutral-400">Founder, Royal Pizza Hub</p>
                 </div>
               </div>
             </div>
 
-            <div className={`p-6 rounded-3xl border shadow-xl flex flex-col justify-between transition-colors ${
+            <div className={`p-4 sm:p-6 rounded-2xl sm:rounded-3xl border shadow-lg sm:shadow-xl flex flex-col justify-between transition-colors ${
               isDark ? "bg-[#12141c] border-neutral-800" : "bg-white border-neutral-200"
             }`}>
               <div>
-                <div className="flex items-center gap-1 text-amber-400 mb-3">
+                <div className="flex items-center gap-1 text-amber-400 mb-2 sm:mb-3">
                   {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="h-4 w-4 fill-amber-400" />
+                    <Star key={i} className="h-3.5 w-3.5 sm:h-4 sm:w-4 fill-amber-400" />
                   ))}
                 </div>
                 <p className={`text-xs sm:text-sm leading-relaxed italic ${isDark ? "text-neutral-300" : "text-neutral-700"}`}>
                   "The table QR code feature is incredible for our dine-in cafe guests. Customers scan the table standee, choose their burger toppings & shakes, and the kitchen receives tickets with audio chimes immediately."
                 </p>
               </div>
-              <div className="mt-6 pt-4 border-t border-neutral-500/10 flex items-center gap-3">
-                <div className="h-10 w-10 rounded-full bg-orange-600/20 text-orange-500 font-bold flex items-center justify-center">
+              <div className="mt-4 sm:mt-6 pt-3 sm:pt-4 border-t border-neutral-500/10 flex items-center gap-3">
+                <div className="h-9 w-9 sm:h-10 sm:w-10 rounded-full bg-orange-600/20 text-orange-500 text-xs sm:text-sm font-bold flex items-center justify-center">
                   AS
                 </div>
                 <div>
                   <p className={`text-xs font-bold ${isDark ? "text-white" : "text-neutral-900"}`}>Aman Sharma</p>
-                  <p className="text-[11px] text-neutral-400">Owner, Crust & Slice Cafe</p>
+                  <p className="text-[10px] sm:text-[11px] text-neutral-400">Owner, Crust & Slice Cafe</p>
                 </div>
               </div>
             </div>
 
-            <div className={`p-6 rounded-3xl border shadow-xl flex flex-col justify-between transition-colors ${
+            <div className={`p-4 sm:p-6 rounded-2xl sm:rounded-3xl border shadow-lg sm:shadow-xl flex flex-col justify-between transition-colors ${
               isDark ? "bg-[#12141c] border-neutral-800" : "bg-white border-neutral-200"
             }`}>
               <div>
-                <div className="flex items-center gap-1 text-amber-400 mb-3">
+                <div className="flex items-center gap-1 text-amber-400 mb-2 sm:mb-3">
                   {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="h-4 w-4 fill-amber-400" />
+                    <Star key={i} className="h-3.5 w-3.5 sm:h-4 sm:w-4 fill-amber-400" />
                   ))}
                 </div>
                 <p className={`text-xs sm:text-sm leading-relaxed italic ${isDark ? "text-neutral-300" : "text-neutral-700"}`}>
                   "What I love most for our dining restaurant is owning customer phone numbers. With aggregators, customer numbers were hidden. Now we have our own database and send weekend thali and curry specials on WhatsApp!"
                 </p>
               </div>
-              <div className="mt-6 pt-4 border-t border-neutral-500/10 flex items-center gap-3">
-                <div className="h-10 w-10 rounded-full bg-emerald-600/20 text-emerald-500 font-bold flex items-center justify-center">
+              <div className="mt-4 sm:mt-6 pt-3 sm:pt-4 border-t border-neutral-500/10 flex items-center gap-3">
+                <div className="h-9 w-9 sm:h-10 sm:w-10 rounded-full bg-emerald-600/20 text-emerald-500 text-xs sm:text-sm font-bold flex items-center justify-center">
                   AK
                 </div>
                 <div>
                   <p className={`text-xs font-bold ${isDark ? "text-white" : "text-neutral-900"}`}>Ananya Kapoor</p>
-                  <p className="text-[11px] text-neutral-400">Owner, Royal Rasoi & Dining</p>
+                  <p className="text-[10px] sm:text-[11px] text-neutral-400">Owner, Royal Rasoi & Dining</p>
                 </div>
               </div>
             </div>
@@ -768,12 +871,12 @@ export default function PlatformLandingPage() {
       </section>
 
       {/* Footer */}
-      <footer className={`py-12 text-xs transition-colors ${
+      <footer className={`py-6 sm:py-8 text-xs transition-colors ${
         isDark ? "bg-[#07090e] text-neutral-500" : "bg-neutral-100 text-neutral-600"
       }`}>
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-6">
+        <div className="mx-auto max-w-7xl px-3 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-4 sm:gap-6 text-center sm:text-left">
           <div className="flex items-center gap-3">
-            <div className="relative h-13 w-13 shrink-0 overflow-hidden rounded-full ring-2.5 ring-[#ffde00] bg-white shadow-sm">
+            <div className="relative h-11 w-11 sm:h-13 sm:w-13 shrink-0 overflow-hidden rounded-full ring-2 sm:ring-2.5 ring-[#ffde00] bg-white shadow-sm">
               <Image
                 src="/kya-khaugey.png"
                 alt="Khaoge Kya?"
@@ -792,15 +895,15 @@ export default function PlatformLandingPage() {
             </div>
           </div>
 
-          <div className="flex items-center gap-6">
-            <Link href="/features" className="hover:text-red-500">Features</Link>
-            <Link href="/how-it-works" className="hover:text-red-500">How It Works</Link>
-            <Link href="/stores" className="hover:text-red-500">Live Stores</Link>
-            <Link href="/faq" className="hover:text-red-500">FAQs</Link>
-            <Link href="/super-admin/login" className="text-purple-400 hover:text-purple-300 font-bold">Super Admin</Link>
+          <div className="flex flex-wrap items-center justify-center gap-3.5 sm:gap-6">
+            <Link href="/features" className="hover:text-red-500 transition">Features</Link>
+            <Link href="/how-it-works" className="hover:text-red-500 transition">How It Works</Link>
+            <Link href="/stores" className="hover:text-red-500 transition">Live Stores</Link>
+            <Link href="/faq" className="hover:text-red-500 transition">FAQs</Link>
+            <Link href="/super-admin/login" className="text-purple-400 hover:text-purple-300 font-bold transition">Super Admin</Link>
           </div>
 
-          <p>© {new Date().getFullYear()} All rights reserved.</p>
+          <p className="text-[11px]">© {new Date().getFullYear()} All rights reserved.</p>
         </div>
       </footer>
 

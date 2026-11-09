@@ -89,7 +89,7 @@ export function AddToCartModal({ open, product, onClose }: Props) {
         onClick={onClose}
       />
       <div
-        className="relative z-10 flex max-h-[min(90dvh,calc(100svh-1.5rem))] w-full max-w-[min(100%,22rem)] flex-col overflow-hidden rounded-2xl bg-white shadow-[0_8px_40px_-12px_rgba(0,0,0,0.25)] animate-in fade-in zoom-in-95 duration-300 sm:max-h-[min(88vh,900px)] sm:max-w-lg sm:rounded-3xl sm:shadow-2xl"
+        className="relative z-10 flex max-h-[min(90dvh,calc(100svh-1.5rem))] w-full max-w-[min(100%,25rem)] flex-col overflow-hidden rounded-2xl bg-white shadow-[0_8px_40px_-12px_rgba(0,0,0,0.25)] animate-in fade-in zoom-in-95 duration-300 sm:max-h-[min(88vh,900px)] sm:max-w-md sm:rounded-3xl sm:shadow-2xl"
       >
         {/* Header: mobile = small image left + text right (reference) */}
         <div className="relative shrink-0 px-5 pb-1 pt-5 sm:px-6 sm:pb-2 sm:pt-6">

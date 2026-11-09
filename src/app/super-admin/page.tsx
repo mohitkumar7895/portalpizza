@@ -1417,7 +1417,7 @@ export default function SuperAdminDashboard() {
           {/* KPI CARDS - ONLY FOR SUPER ADMIN                       */}
           {/* ====================================================== */}
           {isSuperAdmin && (
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
               {/* Card 1: Monthly Subscriptions MRR */}
               <div
                 onClick={() => setActiveSection("payments")}

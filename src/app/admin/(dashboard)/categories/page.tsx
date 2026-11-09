@@ -10,6 +10,7 @@ import {
 import { uploadImage } from "@/services/products";
 import type { CategoryDTO } from "@/types";
 import { Upload, ArrowLeft } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 
 export default function AdminCategoriesPage() {
@@ -230,13 +231,70 @@ export default function AdminCategoriesPage() {
         </div>
       </form>
 
-      <div className="overflow-x-auto rounded-2xl border border-neutral-200 bg-white scrollbar-hide">
+      {/* Mobile Card List (< md) */}
+      <div className="space-y-3 md:hidden">
+        {loading ? (
+          <div className="rounded-2xl border border-neutral-200 bg-white p-6 text-center text-sm text-neutral-500">
+            Loading categories…
+          </div>
+        ) : list.length === 0 ? (
+          <div className="rounded-2xl border border-neutral-200 bg-white p-6 text-center text-sm text-neutral-500">
+            No categories yet. Add your first category above!
+          </div>
+        ) : (
+          list.map((c) => (
+            <div
+              key={c._id}
+              className="rounded-2xl border border-neutral-200 bg-white p-3.5 shadow-xs flex items-center justify-between gap-3"
+            >
+              <div className="flex items-center gap-3 min-w-0">
+                <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-xl border border-neutral-200 bg-neutral-100">
+                  <Image
+                    src={c.image || "/placeholder-food.svg"}
+                    alt={c.name}
+                    fill
+                    className="object-cover"
+                    sizes="48px"
+                  />
+                </div>
+                <div className="min-w-0">
+                  <h3 className="text-sm font-bold text-neutral-900 truncate">{c.name}</h3>
+                  <p className="text-xs text-neutral-500">Order: {c.sortOrder}</p>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-1.5 shrink-0">
+                <button
+                  type="button"
+                  onClick={() => {
+                    startEdit(c);
+                    window.scrollTo({ top: 0, behavior: "smooth" });
+                  }}
+                  className="rounded-lg bg-neutral-100 px-3 py-1.5 text-xs font-bold text-neutral-800 hover:bg-neutral-200 transition cursor-pointer"
+                >
+                  Edit
+                </button>
+                <button
+                  type="button"
+                  onClick={() => onDelete(c)}
+                  className="rounded-lg bg-red-50 px-3 py-1.5 text-xs font-bold text-red-600 hover:bg-red-100 transition cursor-pointer"
+                >
+                  Delete
+                </button>
+              </div>
+            </div>
+          ))
+        )}
+      </div>
+
+      {/* Desktop Table (md:block) */}
+      <div className="hidden md:block overflow-x-auto rounded-2xl border border-neutral-200 bg-white scrollbar-hide">
         <table className="w-full text-left text-sm">
           <thead className="bg-neutral-50 text-xs uppercase text-neutral-500">
             <tr>
-              <th className="px-4 py-3">Name</th>
-              <th className="px-4 py-3">Order</th>
               <th className="px-4 py-3">Image</th>
+              <th className="px-4 py-3">Name</th>
+              <th className="px-4 py-3">Sort Order</th>
               <th className="px-4 py-3 text-right">Actions</th>
             </tr>
           </thead>
@@ -250,20 +308,30 @@ export default function AdminCategoriesPage() {
             ) : (
               list.map((c) => (
                 <tr key={c._id} className="border-t border-neutral-100">
+                  <td className="px-4 py-2">
+                    <div className="relative h-10 w-10 overflow-hidden rounded-lg border border-neutral-200 bg-neutral-100">
+                      <Image
+                        src={c.image || "/placeholder-food.svg"}
+                        alt={c.name}
+                        fill
+                        className="object-cover"
+                        sizes="40px"
+                      />
+                    </div>
+                  </td>
                   <td className="px-4 py-3 font-medium">{c.name}</td>
                   <td className="px-4 py-3 tabular-nums">{c.sortOrder}</td>
-                  <td className="px-4 py-3 text-xs break-all">{c.image || "—"}</td>
                   <td className="px-4 py-3 text-right">
                     <button
                       type="button"
-                      className="mr-2 text-[#e60000] hover:underline"
+                      className="mr-2 text-[#e60000] hover:underline cursor-pointer"
                       onClick={() => startEdit(c)}
                     >
                       Edit
                     </button>
                     <button
                       type="button"
-                      className="text-red-600 hover:underline"
+                      className="text-red-600 hover:underline cursor-pointer"
                       onClick={() => onDelete(c)}
                     >
                       Delete

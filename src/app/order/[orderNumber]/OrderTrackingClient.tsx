@@ -247,16 +247,26 @@ export function OrderTrackingClient({ orderNumber }: { orderNumber: string }) {
                 </p>
               ) : (
                 <div className="relative mt-8">
-                  <div className="flex items-start gap-2">
+                  {/* Connect line */}
+                  <div className="absolute top-5 left-8 right-8 h-1 bg-neutral-200 z-0">
+                    <div
+                      className="h-full bg-linear-to-r from-emerald-500 to-emerald-500 transition-all duration-500"
+                      style={{
+                        width: `${Math.max(0, ((steps.filter((s) => s.done).length - 1) / (steps.length - 1)) * 100)}%`,
+                      }}
+                    />
+                  </div>
+
+                  <div className="relative z-10 flex items-start gap-2">
                     {steps.map((st, i) => (
                       <div key={st.id} className="flex flex-1 flex-col items-center">
                         <div
-                          className={`flex h-10 w-10 items-center justify-center rounded-full border-2 text-sm font-bold transition-all ${
+                          className={`flex h-10 w-10 items-center justify-center rounded-full border-2 text-sm font-bold transition-all shadow-xs ${
                             st.done
                               ? "border-emerald-500 bg-emerald-500 text-white"
                               : st.current
-                                ? "border-[#e60000] bg-white text-[#e60000]"
-                                : "border-neutral-200 bg-neutral-100 text-neutral-400"
+                                ? "border-[#e60000] bg-white text-[#e60000] ring-4 ring-red-100"
+                                : "border-neutral-200 bg-white text-neutral-400"
                           }`}
                         >
                           {st.done ? <Check className="h-5 w-5" /> : i + 1}
@@ -272,16 +282,6 @@ export function OrderTrackingClient({ orderNumber }: { orderNumber: string }) {
                         </p>
                       </div>
                     ))}
-                  </div>
-                  
-                  {/* Connect line */}
-                  <div className="absolute top-5 left-0 right-0 h-0.5 bg-neutral-200 -z-10">
-                    <div
-                      className="h-full bg-linear-to-r from-emerald-500 to-emerald-500 transition-all duration-500"
-                      style={{
-                        width: `${steps.filter((s) => s.done).length * 33.33 - 16.67}%`,
-                      }}
-                    />
                   </div>
                 </div>
               )}
