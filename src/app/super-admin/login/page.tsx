@@ -305,23 +305,6 @@ export default function SuperAdminLoginPage() {
               )}
             </button>
           </form>
-
-          {/* Footer Navigation within Card */}
-          <div
-            className={`mt-7 pt-5 border-t text-center ${
-              isDark ? "border-neutral-800/80" : "border-neutral-100"
-            }`}
-          >
-            <p className={`text-xs ${isDark ? "text-neutral-400" : "text-neutral-600"}`}>
-              New Super Administrator?{" "}
-              <Link
-                href="/super-admin/register"
-                className="text-purple-500 font-bold hover:text-purple-400 hover:underline transition"
-              >
-                Register Super Admin
-              </Link>
-            </p>
-          </div>
         </div>
       </main>
 
